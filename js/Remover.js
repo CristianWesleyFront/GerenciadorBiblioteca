@@ -33,3 +33,10 @@ function verificar(){
 }
 
 console.log(verificar2());
+
+
+let novosLivro = [
+    { id: 0,nome: 'Cristian',autor: 'Gato',isbn: '99160566' },
+    { id: 0,nome: 'Fascismo: Um alerta25', autor: 'Madeleine Albright', isbn: '8542214277'},
+    { id: 0,nome: 'Ruptura: A crise da democracia liberal25', autor: 'Manuel Castells', isbn: '8537817643'}
+  ];

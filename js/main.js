@@ -1,90 +1,166 @@
-
-
 let livros = [
   { id: 1,nome: 'Como as democracias morrem',autor: 'Steven Levitsky',isbn: '9788537818008' },
   { id: 2, nome: 'Fascismo: Um alerta', autor: 'Madeleine Albright', isbn: '8542214277'},
   { id: 3, nome: 'Ruptura: A crise da democracia liberal', autor: 'Manuel Castells', isbn: '8537817643'}
 ];
 
-let novosLivro = [
-  { id: 0,nome: 'Cristian',autor: 'Gato',isbn: '99160566' },
-  { id: 0,nome: 'Fascismo: Um alerta25', autor: 'Madeleine Albright', isbn: '8542214277'},
-  { id: 0,nome: 'Ruptura: A crise da democracia liberal25', autor: 'Manuel Castells', isbn: '8537817643'}
-];
+function verificarIsbn10Dig(isbn){
+  let total = 0;
+
+  if((isbn).length == 10){
+    for(let i = 0; i<10;i++){
+      total = total + isbn[i]*(10-i);
+    };
+
+    if(total%11 == 0){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  return false;
+}; 
+
+function verificarIsbn13Dig(isbn){
+  let total = 0;
+  
+  if((isbn).length == 13){
+    for(let i = 0; i<13;i++){
+      if(i % 2 == 0){
+      total = total + isbn[i]*1;
+      }
+      else{
+        total = total + isbn[i]*3;
+      }
+    };
+
+    if(total%10 == 0){
+      return true;
+    }
+
+    else{
+      return false;
+    } 
+  }
+  return false;
+}; 
+
+function transformaIsbnArray(isbn){
+  let aux = isbn;
+  aux = aux.toString();
+  aux = aux.split("");
+
+  return aux;
+};
+
+function verificaNomeValido(nome){
+ // (nome !== undefined && (nome).length > 3)? true:false ;
+ if(nome !== undefined && (nome).length > 3){
+   return true;
+ }
+ return false;
+};
+
+function verificaIsbnValido(isbn){
+  
+  if(isbn !== undefined){ 
+    let auxisbn = transformaIsbnArray(isbn);
+    if((auxisbn).length < 14){
+    return true;
+  }
+}
+  return false;
+};
+
+function tranformaArrayStringForNumber(array){
+  for(let i in array){
+    array[i] = parseInt(array[i]);
+  };
+};
+
+function verificaIsbnGeral(isbn){
+  let verificador;
+  if(isbn.length == 13 || isbn.length == 10){
+    // Mostrar isso para o Welson Play amanhã.
+    tranformaArrayStringForNumber(isbn);
+
+    verificador = (isbn.length == 13)?  verificarIsbn13Dig(isbn) : verificarIsbn10Dig(isbn);
+
+    return verificador;
+  }else{
+    return false;
+  }
+};
+
+function tratarId(){
+  let id = livros.length + 1;
+  return id;
+};
+
+function tratarIndex(idLivro){
+ let index = idLivro-1;
+ return index;
+};
+
+
+
 
 
 const adicionarLivro = livro => {
+  let erro = 0;
+  let id = tratarId();
   
+  let newLivro ={
+    id: id,
+    nome: livro.nome,
+    autor: livro.autor,
+    isbn: livro.isbn
+  };
+
+  if(verificaNomeValido(newLivro.nome) == true){
+    let isbnArray  = transformaIsbnArray(newLivro.isbn);
+
+    if(verificaIsbnValido(newLivro.isbn) == true){
+      let verificador1 = verificaIsbnGeral(isbnArray);
+  
+      (verificador1 == true )? livros.push(newLivro) : erro++;
+    }
+  }else{
+    erro++;
+  }
+
+  if(erro > 0){
+    return 'Ocorreu algum erro na operação';
+  }
+  
+  // return livros;
 };
 
 const removerLivro = idLivro => {
-  let verificador;
-  for(let i = 0 ; i < livros.length; i++){
-    if(livros[i].id === idLivro){
-      livros.splice(i,1)
-      verificador = true;
-    } 
-  }
-  if(verificador != true){
-    return "livro não encontrado"
-  }
-  else{
-    return "Processo feito com sucesso!"
-  }
+  let id = tratarIndex(idLivro);
+  if((livros.length) >= idLivro){
+    livros.splice(id,1)
+    return "Processo feito com sucesso!";
+  } 
+  return "livro não encontrado";
 };
 
 var atualizarLivro = (idLivro, novoLivro) => {
-  
-  function verificar2(parament){
-    let total = 0;
-    for(let i = 0; i<10;i++){
-        total = total + parament[i]*(10-i);
-    }
-    if(total%11 == 0){
-        return true;
-    }
-    else{
-        return false;
-    }; 
-  }
-
-  function verificar(parament){
-    let total = 0;
-    for(let i = 0; i<13;i++){
-        if(i % 2 == 0){
-        total = total + parament[i]*1;
-        }
-        else{
-        total = total + parament[i]*3;
-        }
-    }
-
-    if(total%10 == 0){
-        return true;
-    }
-
-    else{
-        return false;
-    }; 
-  }
-
-  let livro  = novoLivro;
-  let erro=0;
-  let bom;
-  let encontro;
+  let livro = novoLivro;
+  let erro = 0;
+  let aux;
+  let encontrado;
   
   for(let i = 0 ; i < livros.length; i++){
     if(livros[i].id === idLivro){
-      encontro = true;
-      let id = i+1;
-      livros[i].id =id;
-
-
-      if(livro.nome !== undefined && (livro.nome).length > 3){
-      livros[i].nome = livro.nome;
-
+      encontrado = true;
+    
+      if(verificaNomeValido(livro.nome)){
+        livros[i].nome = livro.nome;
       }
-      if((livro.nome).length <= 3){
+
+      if(livro.nome !== undefined && (livro.nome).length <= 3){
         erro++;
       }
 
@@ -92,73 +168,48 @@ var atualizarLivro = (idLivro, novoLivro) => {
         livros[i].autor = livro.autor;
       }
 
-      if(livro.isbn !== undefined){
-        let verificador1;
-        let isbn = livro.isbn;
-        isbn = isbn.toString();
-        isbn = isbn.split("");
+      if(verificaIsbnValido(livro.isbn)){
+        let verificador;
+        let isbnArray = transformaIsbnArray(livro.isbn);
 
-        if(isbn.length == 13 || isbn.length == 10){
-          for(let i in isbn){
-            isbn[i] = parseInt(isbn[i]);
-            } 
+        verificador = verificaIsbnGeral(isbnArray);
 
-            if(isbn.length == 13){
-               verificador1 = verificar(isbn);
-            }
-
-            else{
-              verificador1 = verificar2(isbn);
-            }
-        }else{
-          erro++;
-        }
-
-        if(verificador1 == true ){
+        if(verificador == true ){
            livros[i].isbn = livro.isbn;
         }else{
           erro++;
         }
-        
       }
-      
-      bom = livros[i];
+      aux = livros[i];
     }
-    if(erro > 0){
-      console.log ('Não encontrar o livro e/ou ocorrer algum erro na operação');
-    }
+  };
+
+  if (encontrado == true && erro == 0){
+    return aux;
+  }else{
+    return 'Não encontrar o livro e/ou ocorrer algum erro na operação';
   }
 
-  if (encontro == true){
-    return bom;
-  }else{
-    return 'Não encontrar o livro e/ou ocorrer algum erro na operação'
-  }
 };
 
 const lerLivro = idLivro => {
-  let encontrado;
-   let livro;
-   for(let i = 0 ; i < livros.length; i++){
-     if(livros[i].id === idLivro){
-       encontrado = true;
-       livro = livros[i];
-     } 
-   }
-   function valida(){
-     if(encontrado != true){
-       return "livro não encontrado";
-     }
-     else{
-       return livro;
-     }
-   }
- 
-   return valida();
+  let aux;
+  let ler = livros.filter(function(livros){
+    return livros.id == idLivro;
+  });
+  ler.length == 0 ? aux = 'Livro não encontrado': aux = ler;
+  return aux;
 };
 
 
 
 
-
-console.log(atualizarLivro(3,{nome:'Cri', autor: '',isbn:8524023945}));
+console.log(adicionarLivro({nome:'Crist',autor:'dapd', isbn:'8524023945'}));
+console.log(adicionarLivro({nome:'Crist',autor:'dapd', isbn:'8524023945'}));
+// console.log(atualizarLivro(3,{autor:'wesley'}));
+console.log(lerLivro(5));
+console.log(removerLivro(5));
+console.log(lerLivro(5));
+console.log(adicionarLivro({nome:'Crist',autor:'dapd', isbn:'8524023945'}));
+console.log(atualizarLivro(5 ,{ id: 27 }));
+console.log(lerLivro(5));
