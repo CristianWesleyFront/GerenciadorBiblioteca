@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/CristianWesleyFront/GerenciadorBiblioteca/issues"
   },
-  "homepage": "https://github.com/CristianWesleyFront/GerenciadorBiblioteca#readme"
+  "homepage": "https://github.com/CristianWesleyFront/GerenciadorBiblioteca#readme",
+  "dependencies": {
+    "lodash": "^4.17.11"
+  }
 }

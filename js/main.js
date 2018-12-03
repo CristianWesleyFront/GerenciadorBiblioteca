@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 function verificarIsbn10Dig(isbn){
   let total = 0;
 
@@ -92,18 +94,18 @@ function tratarId(){
   return id;
 };
 
-function tratarIndex(idLivro){
- let index = idLivro-1;
- return index;
-};
+
 
 let livros = [
   { id: 1,nome: 'Como as democracias morrem',autor: 'Steven Levitsky',isbn: '9788537818008' },
-  { id: 2, nome: 'Fascismo: Um alerta', autor: 'Madeleine Albright', isbn: '8542214277'},
-  { id: 3, nome: 'Ruptura: A crise da democracia liberal', autor: 'Manuel Castells', isbn: '8537817643'},
-  { id: 4, nome: "w", autor: "a3" },
-  { id: 5, nome: "k", autor: "a4" },
-  { id: 6, nome: "h", autor: "a5" }
+  { id: 2, nome: 'Fascismo: Um alerta 1 ', autor: 'Madeleine Albright', isbn: '8542214277'},
+  { id: 3, nome: 'Ruptura: A crise da democracia liberal 1', autor: 'Manuel Castells', isbn: '8537817643'},
+  { id: 4, nome: 'Ruptura: A crise da democracia liberal 2', autor: 'Manuel Castells', isbn: '8537817643'},
+  { id: 5, nome: 'Ruptura: A crise da democracia liberal 3', autor: 'Manuel Castells', isbn: '8537817643'},
+  { id: 6, nome: 'Ruptura: A crise da democracia liberal 4', autor: 'Manuel Castells', isbn: '8537817643'},
+  { id: 7, nome: 'Fascismo: Um alerta 2', autor: 'Madeleine Albright', isbn: '8542214277'},
+  { id: 8, nome: 'Fascismo: Um alerta 3 ', autor: 'Madeleine Albright', isbn: '8542214277'},
+  { id: 9, nome: 'Fascismo: Um alerta 4', autor: 'Madeleine Albright', isbn: '8542214277'},
 ];
 
 let votosLivros = [
@@ -156,7 +158,7 @@ function removerVotos(idLivro){
   votosLivros = array;
   //return votosLivros;
 };
-//---------------------------------
+
 function listaIdLivros(){
   let arrayLivros = livros.map(function(livros){
     return livros.id;
@@ -218,7 +220,7 @@ function buscaNomeLivro(idLivro){
   });
   return ler[0].nome;
 };
-//-----------------------------------
+
 function  listaAutores(){
   let array = livros.map(function(livros){
     return livros.autor;
@@ -232,10 +234,32 @@ function toFixedDoisDigitos(numero){
   valorX = valorX.toFixed(1);
   valorX = parseFloat(valorX);
   return valorX;
-}
-//----------------------------------
+};
 
+function tirarRepetidos(){
+  let arrayAutores = listaAutores();
+  let arrayFormatado = _.uniq(arrayAutores);
+  return arrayFormatado;
+};
 
+function comparar(){
+  let valor=[];
+  let arrayAutores = tirarRepetidos();
+  for (let i  in  arrayAutores){
+    valor[i] = _.groupBy(livros,'autor')[arrayAutores[i]].length;
+  }
+  function constroiObj(autor,numeroLivros) {
+    return {
+      autor: autor,
+      Livros: numeroLivros
+    }
+  }
+  for(let i in arrayAutores){
+    arrayAutores[i] = constroiObj(arrayAutores[i],valor[i]);
+  }
+  return arrayAutores;
+
+};
 
 
 
@@ -350,32 +374,26 @@ const livrosMaisVotados = quantidadelivros =>{
   return 'Id invalido, quantidade de livros superior a do banco de dados';
 };
 const autorMaisLivros = () =>{
-  
-};//FALTA FAZER
+  let arrayAutores = comparar();
+  arrayAutores = _.sortBy(arrayAutores,['autor','livros']);
+  return arrayAutores[0];
+};
 
 const adicionarVoto = (idlivro,valorVoto) =>{
-  let valorVotoX = toFixedDoisDigitos(valorVoto);
-  let voto = {
-    idlivro: idlivro,
-    voto: valorVotoX
+  if(idlivro <= livros.length){ 
+    if(valorVoto >= 0 && valorVoto <= 5){
+      let valorVotoX = toFixedDoisDigitos(valorVoto);
+      let voto = {
+        idlivro: idlivro,
+        voto: valorVotoX
+      }
+      votosLivros.push(voto);
+      return 'Operação feita com sucesso!';
+    }else{
+      return 'erro 404 : valor do voto invalido';
+    }
+  }else{
+    return 'erro 454 :  id invalido';
   }
-  votosLivros.push(voto);
-};// FALTA MENSAGEM DE ERRO
+};
 
-
-
-
-
-
-//let array = filtraValorVotos(2);
-//let array = LerVotos(2);
-//let array = mediaVotos(2);
-//removerLivro(2);
-//console.log(livros);
-//console.log(votosLivros);
-//console.log(ordernaArrayDecrescente());
-//console.log(livrosMaisVotados(4));
-//console.log(lerLivro(2));
-//console.log(adicionarVoto(2,5));
-//console.log(votosLivros);
-console.log(toFixedDoisDigitos(2.52525));
