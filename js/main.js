@@ -1,399 +1,188 @@
 var _ = require('lodash');
 
-function verificarIsbn10Dig(isbn){
-  let total = 0;
-
-  if((isbn).length == 10){
-    for(let i = 0; i<10;i++){
-      total = total + isbn[i]*(10-i);
-    };
-
-    if(total%11 == 0){
-      return true;
+let livros = [
+  { id: 1,nome: 'Como as democracias morrem',autor: 'Steven Levitsky',isbn: '9788537818008' },
+  { id: 2,nome: 'Como as democracias morrem1',autor: 'Steven Levitsky',isbn: '9788537818008' },
+  { id: 3, nome: 'Fascismo: Um alerta', autor: 'Madeleine Albright', isbn: '8542214277'},
+  { id: 4, nome: 'Ruptura: A crise da democracia liberal', autor: 'Manuel Castells', isbn: '8537817643'},
+  { id: 5, nome: "w", autor: "a3" },
+  { id: 6, nome: "k", autor: "a4" },
+  { id: 7, nome: "h", autor: "a5" }
+];
+let votosLivros = [
+  { idLivro: 4, voto: 4.0 },{ idLivro: 6, voto: 2.8 },{ idLivro: 2, voto: 4.5 },{ idLivro: 2, voto: 5.0 },
+  { idLivro: 2, voto: 1.1 },{ idLivro: 1, voto: 0.5 },{ idLivro: 3, voto: 0.7 },{ idLivro: 4, voto: 2.8 },
+  { idLivro: 2, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },{ idLivro: 4, voto: 1.9 },
+ ];
+function validaIsbn(isbn,numeroDigitos){
+  if(numeroDigitos == 10){
+    let total = 0;
+    if((isbn).length == 10){
+      for(let i = 0; i<10;i++){
+        total = total + isbn[i]*(10-i);
+      };
+      let aux;
+      total%11 == 0 ? aux = true : aux = false;
+      return aux;
     }
-    else{
-      return false;
-    }
+    return false;
   }
-  return false;
-}; 
-
-function verificarIsbn13Dig(isbn){
-  let total = 0;
-  
-  if((isbn).length == 13){
-    for(let i = 0; i<13;i++){
-      if(i % 2 == 0){
-      total = total + isbn[i]*1;
-      }
-      else{
-        total = total + isbn[i]*3;
-      }
-    };
-
-    if(total%10 == 0){
-      return true;
-    }
-
-    else{
-      return false;
-    } 
-  }
-  return false;
-}; 
-
-function transformaIsbnArray(isbn){
-  let aux = isbn;
-  aux = aux.toString();
-  aux = aux.split("");
-
-  return aux;
-};
-
-function verificaNomeValido(nome){
- // (nome !== undefined && (nome).length > 3)? true:false ;
- if(nome !== undefined && (nome).length > 3){
-   return true;
- }
- return false;
-};
-
-function verificaIsbnValido(isbn){
-  
-  if(isbn !== undefined){ 
-    let auxisbn = transformaIsbnArray(isbn);
-    if((auxisbn).length < 14){
-    return true;
-  }
-}
-  return false;
-};
-
-function tranformaArrayStringForNumber(array){
-  for(let i in array){
-    array[i] = parseInt(array[i]);
-  };
-};
-
-function verificaIsbnGeral(isbn){
-  let verificador;
-  if(isbn.length == 13 || isbn.length == 10){
-    // Mostrar isso para o Welson Play amanhã.
-    tranformaArrayStringForNumber(isbn);
-
-    verificador = (isbn.length == 13)?  verificarIsbn13Dig(isbn) : verificarIsbn10Dig(isbn);
-
-    return verificador;
-  }else{
+  else if(numeroDigitos == 13){
+    let total = 0;
+    if((isbn).length == 13){
+      for(let i = 0; i<13;i++){
+       i % 2 == 0 ? total = total + isbn[i]*1 : total = total + isbn[i]*3;
+      };
+      let aux;
+      total%10 == 0 ?  aux = true : aux = false;
+      return aux;
+      } 
     return false;
   }
 };
-
-function tratarId(){
-  let id = livros.length + 1;
-  return id;
+function validarIdExiste(idlivro){
+  let livrosId = _.map(livros, 'id');
+  let aux = _.includes(livrosId,idlivro);
+  return aux;
 };
-
-
-
-let livros = [
-  { id: 1,nome: 'Como as democracias morrem',autor: 'Steven Levitsky',isbn: '9788537818008' },
-  { id: 2, nome: 'Fascismo: Um alerta 1 ', autor: 'Madeleine Albright', isbn: '8542214277'},
-  { id: 3, nome: 'Ruptura: A crise da democracia liberal 1', autor: 'Manuel Castells', isbn: '8537817643'},
-  { id: 4, nome: 'Ruptura: A crise da democracia liberal 2', autor: 'Manuel Castells', isbn: '8537817643'},
-  { id: 5, nome: 'Ruptura: A crise da democracia liberal 3', autor: 'Manuel Castells', isbn: '8537817643'},
-  { id: 6, nome: 'Ruptura: A crise da democracia liberal 4', autor: 'Manuel Castells', isbn: '8537817643'},
-  { id: 7, nome: 'Fascismo: Um alerta 2', autor: 'Madeleine Albright', isbn: '8542214277'},
-  { id: 8, nome: 'Fascismo: Um alerta 3 ', autor: 'Madeleine Albright', isbn: '8542214277'},
-  { id: 9, nome: 'Fascismo: Um alerta 4', autor: 'Madeleine Albright', isbn: '8542214277'},
-];
-
-let votosLivros = [
-  { idLivro: 4, voto: 4.0 },
-  { idLivro: 6, voto: 2.8 },
-  { idLivro: 2, voto: 4.5 },
-  { idLivro: 2, voto: 5.0 },
-  { idLivro: 2, voto: 1.1 },
-  { idLivro: 1, voto: 0.5 },
-  { idLivro: 3, voto: 0.7 },
-  { idLivro: 4, voto: 2.8 },
-  { idLivro: 2, voto: 1.9 },
- ];
-
-
-function LerVotos(idLivro){
-  let array = votosLivros.filter(function(votosLivros){
-    return votosLivros.idLivro == idLivro;
-  });
-  return array; 
+function lerVotos(idlivro){
+  let aux = _.groupBy(votosLivros,'idLivro')[idlivro];
+  return aux;
 };
-function filtraValorVotos(idLivro){
-  let array = LerVotos(idLivro);
-  let arrayaux = [];
-  for(let i in array){
-    arrayaux[i] = array[i].voto;
-  }
-  return arrayaux;
-};
-function quantidadeVotos(idLivro){
-  let arrayEscolhidos = LerVotos(idLivro);
-  let quantidade = arrayEscolhidos.length;
-
-  return quantidade;
-};
-function mediaVotos(idLivro){
-  let arrayEscolhidos = filtraValorVotos(idLivro);
+const lerLivro = (idlivro) => {
   
-  let quantidade = quantidadeVotos(idLivro);
-  let total = 0;
-  for(let i in arrayEscolhidos){
-    total = total + arrayEscolhidos[i];
-  }
-  return total/quantidade;
-};
-function removerVotos(idLivro){
-  let array = votosLivros.filter(function(votoLivro){
-    return  votoLivro.idLivro != idLivro;
-  })
-  votosLivros = array;
-  //return votosLivros;
-};
-
-function listaIdLivros(){
-  let arrayLivros = livros.map(function(livros){
-    return livros.id;
+  let arrayLivro = livros.filter(function(livros){
+    return livros.id == idlivro;
   });
-  
-  return arrayLivros;
-};
+  if(arrayLivro.length != 0){
+    let quantidadeVotos = lerVotos(idlivro).length;
+    arrayLivro[0].numeroVotos = quantidadeVotos;
+    arrayLivro[0].mediaVotos = _.meanBy(lerVotos(idlivro), 'voto');
 
-function listaQuantidadeVotos(){
-  let arrayLivrosId = listaIdLivros();
-  let quantidade = [];
-  for (let i in arrayLivrosId){
-    quantidade[i] = quantidadeVotos(arrayLivrosId[i]);
+    return arrayLivro ;
+  }else{
+   return 'Não encontrado e/ou ocorreu algum erro na operação';
   }
-  return quantidade;
 };
-function ordernaArrayDecrescente(){
-  let quantidadesVoto = FazObjetoIdVotos();
-  quantidadesVoto = quantidadesVoto.sort(function(a, b) {
-    //MITERIOS DE WELSON
-    if (a.numeroVotos > b.numeroVotos) {
-      return 1;
+const removerLivros = idlivro =>{
+  let removerIdArrayLivros = _.remove(livros, function(livros){
+    return livros.id == idlivro;
+  }); 
+  let removerIdArrayVotos = _.remove(votosLivros, function(votosLivros){
+    return votosLivros.idLivro == idlivro;
+  });
+  let aux;
+  removerIdArrayLivros && removerIdArrayVotos != 0 ? aux = 'Operação feita com sucesso': aux = 'Ocorreu um erro!';
+  return aux;
+};
+const adicionarVoto = (idlivro,valorVoto) =>{
+  let aux = validarIdExiste(idlivro);
+
+  if(aux == true){
+    if(valorVoto >= 0.0 && valorVoto <= 5.0){
+      let objeto = {
+        idlivro : idlivro,
+        Voto : valorVoto
+      }
+      votosLivros.push(objeto);
+      return 'Operação feita com sucesso'
+    }else{
+      return 'Valor Invalido!'
     }
-
-    if (a.numeroVotos < b.numeroVotos) {
-      return -1;
-    }
-
-    return 0;
-  });
-  quantidadesVoto = quantidadesVoto.reverse();
-  
-  return quantidadesVoto;
-};
-
-function criaVinculoIdVotos(numeroVotos,idLivro){
-  return {
-    numeroVotos : numeroVotos,
-    id : idLivro
+  }else{
+    return 'Id Invalido!'
   }
 };
-function FazObjetoIdVotos(){
-  let quantidadesVoto = listaQuantidadeVotos();
-  let arrayIdsLivros = listaIdLivros();
-  
-  let arrayMaior = [];
-
-  for (let i =0 ; i < quantidadesVoto.length; i++){
-    arrayMaior[i] = criaVinculoIdVotos(quantidadesVoto[i],arrayIdsLivros[i]);
-  }
-  
-  
-  return arrayMaior;
-};
-
-function buscaNomeLivro(idLivro){
-  let ler = livros.filter(function(livros){
-    return livros.id == idLivro;
-  });
-  return ler[0].nome;
-};
-
-function  listaAutores(){
-  let array = livros.map(function(livros){
-    return livros.autor;
-  });
-  return array;
-};
-
-function toFixedDoisDigitos(numero){
-  let valorX = numero;
-  
-  valorX = valorX.toFixed(1);
-  valorX = parseFloat(valorX);
-  return valorX;
-};
-
-function tirarRepetidos(){
-  let arrayAutores = listaAutores();
-  let arrayFormatado = _.uniq(arrayAutores);
-  return arrayFormatado;
-};
-
-function comparar(){
-  let valor=[];
-  let arrayAutores = tirarRepetidos();
-  for (let i  in  arrayAutores){
-    valor[i] = _.groupBy(livros,'autor')[arrayAutores[i]].length;
-  }
-  function constroiObj(autor,numeroLivros) {
-    return {
-      autor: autor,
-      Livros: numeroLivros
-    }
-  }
+const autorMaisLivros = () =>{
+  let arrayAutores = _.map(livros, 'autor');
+  arrayAutores = _.uniq(arrayAutores);
+  let valor = []; 
   for(let i in arrayAutores){
-    arrayAutores[i] = constroiObj(arrayAutores[i],valor[i]);
+    valor[i] = _.groupBy(livros,'autor')[arrayAutores[i]].length;
+
+    arrayAutores[i] = {autor: arrayAutores[i], livros: valor[i]};
   }
-  return arrayAutores;
-
+  arrayAutores = _.sortBy(arrayAutores,['livros']);
+  arrayAutores = _.reverse(arrayAutores);
+  return arrayAutores[0];
 };
+const livrosMaisVotados = (numeroDeVezes) =>{
+  aux = validarIdExiste(numeroDeVezes);
+  if(aux ==true){
+    let arrayLivros =_.groupBy(votosLivros,'idLivro');
+    let order = _.orderBy(arrayLivros, ['length'], ['desc']);
+    let imprimir = [];
+    for(let i in order){
+      let maxGroup = order[i];
+      let livro = _.first(maxGroup);
+      let nomeLivro = _.filter(livros,{'id':livro.idLivro});
+      imprimir[i] = {Livro: nomeLivro[0].nome, numeroVotos: maxGroup.length}
+    } 
 
+    imprimir = _.take(imprimir,numeroDeVezes);
 
-
-
-const adicionarLivro = livro => {
+    return imprimir;
+  }else{
+    return 'Não existe votos pra tantos Livros';
+  }
+};
+const atualizarLivro = (idlivro,novoLivro)=>{
   let erro = 0;
-  let id = tratarId();
+  let novolivro = novoLivro;
+  let aux = validarIdExiste(idlivro);
+  let id = 0;
+  id = _.findIndex(livros,{'id':idlivro});
   
-  let newLivro ={
-    id: id,
-    nome: livro.nome,
-    autor: livro.autor,
-    isbn: livro.isbn
-  };
-
-  if(verificaNomeValido(newLivro.nome) == true){
-    let isbnArray  = transformaIsbnArray(newLivro.isbn);
-
-    if(verificaIsbnValido(newLivro.isbn) == true){
-      let verificador1 = verificaIsbnGeral(isbnArray);
-  
-      (verificador1 == true )? livros.push(newLivro) : erro++;
-    }
+  if(aux == true && id>0){
+    novolivro.nome != undefined && (novolivro.nome).length > 3 ? livros[id].nome = novolivro.nome : null;
+    novolivro.nome !== undefined && (novolivro.nome).length <= 3 ? erro++ :  null;
+    novolivro.autor !== undefined ? livros[id].autor = novolivro.autor : null ;
+    if(novolivro.isbn != undefined){
+      let aux = novolivro.isbn;
+      aux = aux.toString();
+      novolivro.isbn = aux;
+      let numeroDigitosIsbn =  aux.length;
+      if(numeroDigitosIsbn == 10 || numeroDigitosIsbn == 13){
+        aux = aux.split("");
+        let verificador;
+        verificador = validaIsbn(aux, numeroDigitosIsbn);
+          verificador == true ? livros[id].isbn = novolivro.isbn : erro++;
+      }else{
+        erro++;
+      }
+    } 
   }else{
     erro++;
   }
-
   if(erro > 0){
-    return 'Ocorreu algum erro na operação';
+    return 'erro';
   }
-  
-  // return livros;
+  return livros[id];
 };
-
-const removerLivro = idLivro => {
-  removerVotos(idLivro);
-  let array = livros.filter(function(livros){
-    return  livros.id != idLivro;
-  })
-  livros = array;
-};
-
-const atualizarLivro = (idLivro, novoLivro) => {
-  let livro = novoLivro;
-  let erro = 0;
-  let aux;
-  let encontrado;
-  
-  for(let i = 0 ; i < livros.length; i++){
-    if(livros[i].id === idLivro){
-      encontrado = true;
-    
-      if(verificaNomeValido(livro.nome)){
-        livros[i].nome = livro.nome;
-      }
-
-      if(livro.nome !== undefined && (livro.nome).length <= 3){
-        erro++;
-      }
-
-      if(livro.autor !== undefined){
-        livros[i].autor = livro.autor;
-      }
-
-      if(verificaIsbnValido(livro.isbn)){
-        let verificador;
-        let isbnArray = transformaIsbnArray(livro.isbn);
-
-        verificador = verificaIsbnGeral(isbnArray);
-
-        if(verificador == true ){
-           livros[i].isbn = livro.isbn;
-        }else{
-          erro++;
-        }
-      }
-      aux = livros[i];
-    }
+const adicionarLivro = (novolivro)=>{
+  let verificador = 0;
+  let livro = {
+    id : (livros[livros.length-1].id)+1,
+    nome : novolivro.nome,
+    autor : novolivro.autor,
+    isbn : novolivro.isbn
   };
-
-  if (encontrado == true && erro == 0){
-    return aux;
-  }else{
-    return 'Não encontrar o livro e/ou ocorrer algum erro na operação';
-  }
-
-};
-
-const lerLivro = idLivro => {
-  let aux;
-  let ler = livros.filter(function(livros){
-    return livros.id == idLivro;
-  });
-  
-  ler[0].mediaVotos = mediaVotos(idLivro);
-  ler[0].quantidadeVotos = quantidadeVotos(idLivro); 
-
-  ler.length == 0 ? aux = 'Livro não encontrado': aux = ler;
-  return aux;
-};
-
-const livrosMaisVotados = quantidadelivros =>{
-  if(quantidadelivros <= livros.length+1){
-    let mostraMaior=[];
-    let votosOrdenados = ordernaArrayDecrescente();
-    for (let i=0; i< quantidadelivros;i++){
-      mostraMaior[i] = "Nome: "+buscaNomeLivro(i+1)+", ID: "+votosOrdenados[i].id+", Numero de votos:"+votosOrdenados[i].numeroVotos;
-    }
-    
-    return mostraMaior;
-  }
-  return 'Id invalido, quantidade de livros superior a do banco de dados';
-};
-const autorMaisLivros = () =>{
-  let arrayAutores = comparar();
-  arrayAutores = _.sortBy(arrayAutores,['autor','livros']);
-  return arrayAutores[0];
-};
-
-const adicionarVoto = (idlivro,valorVoto) =>{
-  if(idlivro <= livros.length){ 
-    if(valorVoto >= 0 && valorVoto <= 5){
-      let valorVotoX = toFixedDoisDigitos(valorVoto);
-      let voto = {
-        idlivro: idlivro,
-        voto: valorVotoX
-      }
-      votosLivros.push(voto);
-      return 'Operação feita com sucesso!';
+  novolivro.nome != undefined && (novolivro.nome).length > 3 ? verificador++ : null;
+  novolivro.nome !== undefined && (novolivro.nome).length <= 3 ? verificador-- :  null;
+  novolivro.autor !== undefined ? verificador++ : null ;
+  if(novolivro.isbn != undefined){
+    let aux = novolivro.isbn;
+    aux = aux.toString();
+    novolivro.isbn = aux;
+    let numeroDigitosIsbn =  aux.length;
+    if(numeroDigitosIsbn == 10 || numeroDigitosIsbn == 13){
+      aux = aux.split("");
+      let verificadorIsbn;
+      verificadorIsbn = validaIsbn(aux, numeroDigitosIsbn);
+        verificadorIsbn == true ? verificador++ : verificador--;
     }else{
-      return 'erro 404 : valor do voto invalido';
+      verificador--;
     }
-  }else{
-    return 'erro 454 :  id invalido';
   }
+  verificador >= 2 ? livros.push(livro):'erro';
 };
-
