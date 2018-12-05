@@ -186,3 +186,12 @@ const adicionarLivro = (novolivro)=>{
   }
   verificador >= 2 ? livros.push(livro):'erro';
 };
+
+/* ERROS : 
+  Codigos desnecessarios(AtualizarLivro , 
+  adicionar livro,autorMaisLivros) , 
+  ultilização de funçoes de maneira errada(LerVotos),
+  documentação de codigo fraca , 
+  Verificação no bando de dados(removerLivros),
+  Funções com mais de um Motivopraexiste(verificarIsbn)
+  */
